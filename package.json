@@ -1,0 +1,29 @@
+{
+  "name": "mcp-server-thisislike",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MCP server for ThisIsLike: find things that are like each other and save them to your InfraNodus graphs. Authenticated with your InfraNodus API key.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3020",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "node scripts/test-mcp.mjs"
+  },
+  "engines": { "node": ">=20.11.0" },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "next": "15.5.29",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "^18",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@9.12.3"
+}
