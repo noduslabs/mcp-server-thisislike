@@ -12,7 +12,7 @@ How to use the tools:
 - Saved searches are private by default. Setting isPublic also makes the whole InfraNodus graph public, and isPublished lists the search in the community: ask the user before either.
 - Browse: list_saved_searches (scope published, public, guides, mine, favorites), get_saved_search(id), list_guides, list_tags.
 - Edit the user's own searches: update_saved_search, add_results, remove_result (dryRun first), delete_saved_search (confirm first).
-- add_contribution adds a result to any query for everyone (shown on the website, written to the community graph), credited to the user.
+- add_contribution adds a result to any query for everyone (shown on the website), credited to the user. First check find_items for an existing item with that name and, if one fits, add it under its exact name so it links to the same item. It goes to the community graph thisislike_public; moderators can pick another thisislike graph (list_contribution_graphs), e.g. the graph the saved search is in.
 - Every saved search and search has a page on ThisIsLike (the url field): share it with the user.
 The connection is authenticated with the user's InfraNodus API key; they can only change their own saved searches.`
 

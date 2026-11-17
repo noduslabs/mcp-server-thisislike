@@ -45,7 +45,9 @@ claude mcp add --transport http thisislike https://<deployment>/mcp \
 | `delete_saved_search` | Delete a saved search (the graph keeps its statements) |
 | `add_results` | Add results to a saved search |
 | `remove_result` | Remove a result from a saved search (dry run available) |
-| `list_contributions` / `add_contribution` / `delete_contribution` | "Add yours": results anyone can add to a query |
+| `list_contributions` / `add_contribution` / `delete_contribution` | "Add yours": results anyone can add to a query (moderators can pick the thisislike graph) |
+| `find_items` | Existing items matching a name, to add one under its exact name |
+| `list_contribution_graphs` | The thisislike graphs an added result can go to |
 | `list_tags` | Tags with counts |
 | `list_guides` | Curated guides by category |
 | `set_guide_category_description` | Describe a guide category (moderators) |

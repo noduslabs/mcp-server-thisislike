@@ -210,7 +210,7 @@ export function registerTools(server: McpServer, apiKey: string) {
     {
       title: "Add a result to any search",
       description:
-        'Adds a result to a query for everyone ("add yours"): it appears with that query\'s results on ThisIsLike, credited to the user, and is written to the shared community graph. Unlike save_search it does not touch the user\'s own graphs. 10 per hour per user; the same name can\'t be added twice to a query.',
+        'Adds a result to a query for everyone ("add yours"): it appears with that query\'s results on ThisIsLike, credited to the user, and is written to a thisislike graph (the community graph thisislike_public unless a moderator picks another with `graph`). Unlike save_search it does not touch the user\'s own graphs. If the name matches an existing item (find_items), that item is added under its exact name, with its description, link and tags where none are given. 10 per hour per user; the same name can\'t be added twice to a query.',
       inputSchema: {
         query: z.string().min(1).max(200).describe("The search to add to."),
         name: z.string().min(1).max(100).describe("What is like it."),
@@ -218,6 +218,11 @@ export function registerTools(server: McpServer, apiKey: string) {
         description: z.string().max(500).optional(),
         url: z.string().max(500).optional().describe("A link (http or https)."),
         tags: z.array(z.string()).max(5).optional(),
+        graph: z
+          .string()
+          .max(100)
+          .optional()
+          .describe("The thisislike graph to write it to (default thisislike_public). Other graphs: moderators only, see list_contribution_graphs."),
       },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     },
@@ -225,10 +230,38 @@ export function registerTools(server: McpServer, apiKey: string) {
   )
 
   server.registerTool(
+    "list_contribution_graphs",
+    {
+      title: "Graphs an added result can go to",
+      description:
+        "The thisislike graphs add_contribution can write to: for moderators every graph of the thisislike account (canChoose: true), for everyone else only the community graph.",
+      inputSchema: {},
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async () => reply(await call("GET", "/contributions/graphs")),
+  )
+
+  server.registerTool(
+    "find_items",
+    {
+      title: "Find existing items",
+      description:
+        'Items ThisIsLike already knows whose name matches (case, spaces, dashes and underscores ignored), with their description, link and tags. Use before add_contribution: adding an existing item under its exact name links to the same item, e.g. "eh tw71" finds "Epson EH-TW7100".',
+      inputSchema: {
+        q: z.string().min(2).describe("Part of the name."),
+        exclude: z.string().optional().describe("A name to leave out, e.g. the search itself."),
+        limit: z.number().int().min(1).max(20).optional().describe("Default 8."),
+      },
+      annotations: { readOnlyHint: true, openWorldHint: false },
+    },
+    async ({ q, exclude, limit }) => reply(await call("GET", `/items${qs({ q, exclude, limit })}`)),
+  )
+
+  server.registerTool(
     "delete_contribution",
     {
       title: "Remove an added result",
-      description: "Removes an added result (and its statement in the community graph). Only its author or a moderator can.",
+      description: "Removes an added result (and its statement in the graph it was written to). Only its author or a moderator can.",
       inputSchema: {
         id: z.string().min(1).describe("The contribution id (from list_contributions or get_saved_search)."),
         query: z.string().min(1).describe("The search it was added to."),
