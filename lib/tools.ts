@@ -135,13 +135,18 @@ export function registerTools(server: McpServer, apiKey: string) {
     {
       title: "Change a saved search",
       description:
-        "Changes a saved search: visibility (isPublic, also changes the graph's privacy in InfraNodus), community listing (isPublished, needs public), favorite, tags (replaces them), the graph it shows, or guide status (moderators only). Owners can change everything except isGuide; moderators can change tags, graphName and isGuide on anyone's search. Making a search private also unpublishes it.",
+        "Changes a saved search: visibility (isPublic, also changes the graph's privacy in InfraNodus), community listing (isPublished, needs public), favorite, tags (replaces them), its description, the graph it shows, or guide status (moderators only). Owners can change everything except isGuide; moderators can change tags, description, graphName and isGuide on anyone's search. Making a search private also unpublishes it.",
       inputSchema: {
         id: z.string().min(1).describe("The search id."),
         isPublic: z.boolean().optional(),
         isPublished: z.boolean().optional(),
         isFavorite: z.boolean().optional(),
         tags: z.array(z.string()).max(5).optional().describe("The new tags (replaces the old ones)."),
+        description: z
+          .string()
+          .max(1000)
+          .optional()
+          .describe("What the search (collection) is about, shown on its page, in the community list and in guides. Empty removes it."),
         graphName: z.string().optional().describe("Which of the owner's graphs the search shows."),
         isGuide: z.boolean().optional().describe("Moderators: promote to (or remove from) the guides."),
       },
